@@ -1,0 +1,9 @@
+POST http://localhost:3000/user/signup
+Content-Type: application/json
+
+{
+   "name": "Norman Osbourne", 
+   "email": "osbourne@oscorap.com" ,
+   "password": "ihatepeter",
+   "role": "NORMAL"
+}
