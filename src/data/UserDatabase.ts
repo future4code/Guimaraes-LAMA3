@@ -1,9 +1,10 @@
 import { BaseDatabase } from "./BaseDatabase";
 import { User } from "../model/User";
+import { CustomError } from "../error/CustomError";
 
 export class UserDatabase extends BaseDatabase {
 
-  private static TABLE_NAME = "";
+  private static TABLE_NAME = "IWFS_User";
 
   public async createUser(
     id: string,
@@ -23,7 +24,7 @@ export class UserDatabase extends BaseDatabase {
         })
         .into(UserDatabase.TABLE_NAME);
     } catch (error) {
-      throw new Error(error.sqlMessage || error.message);
+       throw new Error(`${error}`)
     }
   }
 

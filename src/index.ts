@@ -2,7 +2,10 @@ import dotenv from "dotenv";
 import {AddressInfo} from "net";
 import express from "express";
 import { userRouter } from "./routes/userRouter";
+import { Migrations } from './migration/migrations'
 dotenv.config();
+const migration = new Migrations()
+migration.create()
 const app = express();
 
 app.use(express.json());
