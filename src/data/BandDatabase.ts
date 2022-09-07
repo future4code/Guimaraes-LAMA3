@@ -1,5 +1,4 @@
-import { faBandAid } from "@fortawesome/free-solid-svg-icons";
-import { getGeneratedNameForNode } from "typescript";
+import { CustomError } from "../error/CustomError";
 import { bandType } from "../model/Band";
 import { BaseDatabase } from "./BaseDatabase";
 
@@ -13,16 +12,16 @@ export class BandDatabase extends BaseDatabase {
   
     public insertBand = async (recipe: bandType) => {
       try {
-        await BandDatabase.connection
+        await this.getConnection()
           .insert({
-            id: band.id,
-            name: band.name,
-            music_genre: band.music_genre,
-            responsible: band.responsible
- }
-          })
-          .into(this.tableName.toString());
+            id: recipe.id,
+            name: recipe.name,
+            music_genre: recipe.music_genre,
+            responsible: recipe.responsible
+      }).into(this.tableName.toString());
+
       } catch (error: any) {
         throw new CustomError(400, error.message);
       }
-    };
+    }
+}
