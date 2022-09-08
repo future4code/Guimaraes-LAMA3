@@ -62,7 +62,7 @@ export class UserBusiness {
         }
     
         const payload: Authenticator = {
-          id: user.id
+          id: input.id
         }
     
         const token = Authenticator.generateToken(payload)

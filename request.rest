@@ -16,3 +16,14 @@ Content-Type: application/json
     "name": "Norman Osbourne",
     "password": "ihatepeter"
 }
+
+###
+POST http://localhost:3000/band/create
+Content-Type: application/json
+
+{
+    "name": "Foo Fighters",
+    "music_genre": "rock",
+    "responsible": "Dave Grohl"
+
+}
