@@ -3,8 +3,11 @@ import { UserDatabase } from "../data/UserDatabase";
 import { IdGenerator } from "../services/IdGenerator";
 import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
+import { hash } from "bcryptjs";
+import { CustomError } from "../error/CustomError";
 
 export class UserBusiness {
+    userDB: any;
 
     async createUser(user: UserInputDTO) {
 
@@ -40,4 +43,30 @@ export class UserBusiness {
 
         return accessToken;
     }
+
+    public login = async (input: LoginInputDTO) => {
+        let { email, password} = input
+    
+        if(!email || !password) {
+          throw new CustomError(400, "falta parametro")
+        }
+    
+        const user = await this.userDB.findUserByEmail(email)
+        const hashCompare = await HashManager.compareHash(
+          password,
+          user.password
+        )
+    
+        if(!hashCompare){
+          throw new InvalidPassword()
+        }
+    
+        const payload: Authenticator = {
+          id: user.id
+        }
+    
+        const token = Authenticator.generateToken(payload)
+    
+        return token    
+}
 }
