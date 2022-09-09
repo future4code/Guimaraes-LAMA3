@@ -6,7 +6,6 @@ import { BaseDatabase } from "../data/BaseDatabase";
 export class UserController {
     async signup(req: Request, res: Response) {
         try {
-
             const input: UserInputDTO = {
                 email: req.body.email,
                 name: req.body.name,
@@ -18,18 +17,15 @@ export class UserController {
             const token = await userBusiness.createUser(input);
 
             res.status(200).send({ token });
-
-        } catch (error) {
-            res.status(400).send({ error: error.message });
+        }catch(error){
+            res.status(400).send({ error: error})
         }
 
         await BaseDatabase.destroyConnection();
     }
 
-    async login(req: Request, res: Response) {
-
+    async login(req: Request, res: Response ) {
         try {
-
             const loginData: LoginInputDTO = {
                 email: req.body.email,
                 password: req.body.password
@@ -41,7 +37,7 @@ export class UserController {
             res.status(200).send({ token });
 
         } catch (error) {
-            res.status(400).send({ error: error.message });
+            res.status(400).send({ error: error });
         }
 
         await BaseDatabase.destroyConnection();

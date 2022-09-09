@@ -1,0 +1,38 @@
+POST http://localhost:3000/user/signup
+Content-Type: application/json
+
+{
+   "name": "Robson", 
+   "email": "robson@gmail.com" ,
+   "password": "123mudar",
+   "role": "NORMAL"
+}
+
+###
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "email": "robson@gmail.com",
+    "password": "123mudar"
+}
+
+###
+POST http://localhost:3000/band/create
+Content-Type: application/json
+
+{
+    "name": "Foo Fighters2",
+    "music_genre": "rock1",
+    "responsible": "Dave Grohl1"
+
+}
+
+###
+GET http://localhost:3000/band/searchByIdOrName
+Content-Type: application/json
+
+{
+    "name": "Foo Fighters2",
+    "id": ""
+}

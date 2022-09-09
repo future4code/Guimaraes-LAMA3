@@ -3,41 +3,76 @@ import { UserDatabase } from "../data/UserDatabase";
 import { IdGenerator } from "../services/IdGenerator";
 import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
+import { CustomError } from "../error/CustomError";
+import { InvalidPassword } from "../error/UserError";
+import { AuthenticatorData } from "../model/Authenticator";
 
 export class UserBusiness {
+  userDatabase: UserDatabase
+  authenticator: Authenticator
+  hashManager: HashManager
+  idGenerator: IdGenerator
 
-    async createUser(user: UserInputDTO) {
+  constructor(){
+    this.userDatabase = new UserDatabase()
+    this.authenticator = new Authenticator()
+    this.hashManager = new HashManager()
+    this.idGenerator = new IdGenerator()
+  }
 
-        const idGenerator = new IdGenerator();
-        const id = idGenerator.generate();
+  public async createUser(user: UserInputDTO) {
 
-        const hashManager = new HashManager();
-        const hashPassword = await hashManager.hash(user.password);
+      const id = this.idGenerator.generate();
 
-        const userDatabase = new UserDatabase();
-        await userDatabase.createUser(id, user.email, user.name, hashPassword, user.role);
+      const hashPassword = await this.hashManager.hash(user.password);
 
-        const authenticator = new Authenticator();
-        const accessToken = authenticator.generateToken({ id, role: user.role });
+      await this.userDatabase.createUser(id, user.email, user.name, hashPassword, user.role);
 
-        return accessToken;
+      const accessToken = this.authenticator.generateToken({ id, role: user.role });
+
+      return accessToken;
+  }
+
+  public async getUserByEmail(user: LoginInputDTO) {
+
+      const userFromDB = await this.userDatabase.getUserByEmail(user.email);
+
+      const hashCompare = await this.hashManager.compare(user.password, userFromDB.getPassword());
+
+      const accessToken = this.authenticator.generateToken({ id: userFromDB.getId(), role: userFromDB.getRole() });
+
+      if (!hashCompare) {
+          throw new InvalidPassword()
+      }
+
+      return accessToken;
+  }
+
+  public login = async (input: LoginInputDTO) => {
+    let { email, password} = input
+
+    if(!email || !password) {
+      throw new CustomError(400, "falta parametro")
     }
 
-    async getUserByEmail(user: LoginInputDTO) {
+    const user = await this.userDatabase.getUserByEmail(email)
 
-        const userDatabase = new UserDatabase();
-        const userFromDB = await userDatabase.getUserByEmail(user.email);
+    const hashCompare = await this.hashManager.compareHash(
+      password,
+      user.getPassword()
+    )
 
-        const hashManager = new HashManager();
-        const hashCompare = await hashManager.compare(user.password, userFromDB.getPassword());
-
-        const authenticator = new Authenticator();
-        const accessToken = authenticator.generateToken({ id: userFromDB.getId(), role: userFromDB.getRole() });
-
-        if (!hashCompare) {
-            throw new Error("Invalid Password!");
-        }
-
-        return accessToken;
+    if(!hashCompare){
+      throw new InvalidPassword()
     }
+
+    const payload: AuthenticatorData = {
+      id: user.getId(),
+      role: user.getRole()
+    }
+
+    const token = this.authenticator.generateToken(payload)
+
+    return token    
+  }
 }
