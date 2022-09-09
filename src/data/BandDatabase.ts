@@ -1,9 +1,9 @@
 import { CustomError } from "../error/CustomError";
-import { bandType } from "../model/Band";
+import { Band, BandSearchDTO, bandType } from "../model/Band";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class BandDatabase extends BaseDatabase {
-    private tableName: String
+    private tableName: string
     
     constructor(){
       super()
@@ -20,8 +20,23 @@ export class BandDatabase extends BaseDatabase {
             responsible: recipe.responsible
       }).into(this.tableName.toString());
 
-      } catch (error: any) {
-        throw new CustomError(400, error.message);
+      } catch (error) {
+        throw new CustomError(400, "Ocorreu um erro");    
       }
+    }
+
+    public getBandByNameOrId = async (input: BandSearchDTO) => {
+      try {
+        const result = await this.getConnection()
+          .select("*")
+          .from(this.tableName.toString())
+          .where("id", input.id)
+          .orWhere("name", input.name)
+
+          return Band.toBandModel(result[0])
+      } catch (error) {
+        throw new CustomError(400, "Ocorreu um erro");   
+      }
+      
     }
 }

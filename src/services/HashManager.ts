@@ -2,8 +2,12 @@ import * as bcrypt from "bcryptjs";
 
 
 export class HashManager {
-    static compareHash(password: string, password1: any) {
-        throw new Error("Method not implemented.");
+    static compareHash(password: string, password1: string): Boolean {
+        if(password === password1){
+            return true
+        }else{
+            return false
+        }
     }
     static compare(password: any) {
         throw new Error("Method not implemented.");

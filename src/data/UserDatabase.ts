@@ -1,6 +1,7 @@
 import { BaseDatabase } from "./BaseDatabase";
 import { User } from "../model/User";
 import { CustomError } from "../error/CustomError";
+import { SqlMessageError } from "../error/SqlMessageError";
 
 export class UserDatabase extends BaseDatabase {
 
@@ -23,8 +24,9 @@ export class UserDatabase extends BaseDatabase {
           role
         })
         .into(UserDatabase.TABLE_NAME);
-    } catch (error) {
-       throw new Error(`${error}`)
+      
+    } catch (error) {        
+       throw new CustomError(400, `${error}`)
     }
   }
 

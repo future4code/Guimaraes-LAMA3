@@ -24,7 +24,7 @@ export class UserController {
         await BaseDatabase.destroyConnection();
     }
 
-    async login(req: Request, res: Response) {
+    async login(req: Request, res: Response ) {
         try {
             const loginData: LoginInputDTO = {
                 email: req.body.email,

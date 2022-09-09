@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { BandBusiness } from "../business/BandBusiness";
-import { BandInputDTO } from "../model/Band";
+import { BandInputDTO, BandSearchDTO } from "../model/Band";
 
 export class BandController {
 
@@ -24,8 +24,23 @@ export class BandController {
           await this.bandBusiness.createBand(band)
   
           res.status(201).send({ message: "Banda criada!" });
-      } catch (error: any) {
-          res.status(400).send(error.message);
+      } catch (error) {
+          res.status(400).send({ error: error });
+      }
+    }
+
+
+    public getBandByNameOrId= async (req: Request, res: Response) =>{
+      try {
+        const { id, name } = req.body as BandSearchDTO
+        const band: BandSearchDTO ={
+          id,
+          name
+        }
+        const result = await this.bandBusiness.getBandByNameOrId(band)
+        res.status(201).send(result);
+      } catch (error) {
+        res.status(400).send({ error: error });
       }
     }
 } 

@@ -1,15 +1,13 @@
 import * as jwt from "jsonwebtoken";
 
 export class Authenticator {
-  static generateToken(payload: AuthenticationData) {
-      throw new Error("Method not implemented.");
-  }
-  public generateToken(input: AuthenticationData,
+
+  public generateToken(payload: AuthenticationData,
     expiresIn: string = process.env.ACCESS_TOKEN_EXPIRES_IN!): string {
     const token = jwt.sign(
       {
-        id: input.id,
-        role: input.role
+        id: payload.id,
+        role: payload.role
       },
       process.env.JWT_KEY as string,
       {
