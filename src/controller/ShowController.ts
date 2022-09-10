@@ -1,5 +1,6 @@
+import { Request, Response } from "express"
 import { ShowBusiness } from "../business/Showbusiness"
-import { ShowInputDTO } from "../model/Show"
+import { ShowInputDTO, ShowSearchDTO } from "../model/Show"
 
 export class ShowController {
 

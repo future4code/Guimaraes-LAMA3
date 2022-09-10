@@ -1,5 +1,5 @@
 import { ShowDatabase } from "../data/ShowDatabase"
-import { ShowInputDTO } from "../model/Show"
+import { ShowInputDTO, ShowSearchDTO } from "../model/Show"
 import { IdGenerator } from "../services/IdGenerator"
 
 export class ShowBusiness {
@@ -23,7 +23,7 @@ export class ShowBusiness {
         return accessToken;
     }
   
-    public async getShowByDate(show: ShowInputDTO) {
+    public async getShowByDate(show: ShowSearchDTO) {
   
         const showFromDB = await this.showDatabase.getShowByDate(show.date);
   
